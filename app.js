@@ -9,14 +9,28 @@ var Direction;
 })(Direction || (Direction = {}));
 var dirs = [Direction.normal, Direction.normal, Direction.normal];
 function FixDir(img, dir) {
+    var stylestr = "rotate(0deg)";
     if (dir == Direction.home_right)
-        img.style.transform = "rotate(90deg)";
+        stylestr = "rotate(90deg)";
     else if (dir == Direction.home_left)
-        img.style.transform = "rotate(270deg)";
+        stylestr = "rotate(270deg)";
     else if (dir == Direction.home_up)
-        img.style.transform = "rotate(180deg)";
+        stylestr = "rotate(180deg)";
     else
-        img.style.transform = "rotate(0deg)";
+        stylestr = "rotate(0deg)";
+    var pdiv = img.parentElement;
+    if (dir == Direction.home_left || dir == Direction.home_right) {
+        pdiv.style.width = img.height + "px";
+        pdiv.style.height = img.width + "px";
+        var ppx = (img.width - img.height) / 2;
+        var ppy = -(img.height - img.width) / 2;
+        stylestr += " translate(" + ppx + "px," + ppy + "px)";
+    }
+    else {
+        pdiv.style.width = img.width + "px";
+        pdiv.style.height = img.height + "px";
+    }
+    img.style.transform = stylestr;
 }
 function onGetAllOriInfo() {
     var el = document.getElementById('content');
@@ -48,6 +62,8 @@ window.onload = function () {
     var img1 = document.getElementById('img1');
     var img2 = document.getElementById('img2');
     var img3 = document.getElementById('img3');
+    img1.parentElement.style.width = img1.width + "px";
+    img1.parentElement.style.height = img1.height + "px";
     var dcount = 0;
     EXIF.getOrientation(img1, function (dir) {
         console.log("oritag1=" + dir);
